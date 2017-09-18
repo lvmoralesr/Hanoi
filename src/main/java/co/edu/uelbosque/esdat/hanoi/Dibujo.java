@@ -23,7 +23,6 @@ public class Dibujo extends JPanel implements ActionListener {
     private Image[] fichas;
     private int x, y;
     private int ficha;
-    private int nm;
     private Movimiento[] movimientos;
     private Posicion[] posiciones;
     private Timer timer;
@@ -57,14 +56,15 @@ public class Dibujo extends JPanel implements ActionListener {
     }
 
     private void inicializarComponentesDeAnimacion() {
-        nm = 0;
+        
         topes = new int[LIMITE_TORRES + 1];
         topes[1] = nroFichas;
         topes[2] = 0;
         topes[3] = 0;
         ficha = 1;
         movimientos = new Movimiento[(int) Math.pow(2, nroFichas)];
-        algoritmoHanoi(nroFichas, 1, 2, 3); // llena el vector de movimientos
+        AlgoritmoHanoi ah=new AlgoritmoHanoi(movimientos);
+        movimientos=ah.algoritmoHanoi(nroFichas, 1, 2, 3); // llena el vector de movimientos
         posiciones = new Posicion[9];
         for (int i = 1; i <= nroFichas; i++) {
             int w = nroFichas - i + 1;
@@ -90,15 +90,7 @@ public class Dibujo extends JPanel implements ActionListener {
         g.dispose();
     }
 
-    public void algoritmoHanoi(int n, int origen, int temporal, int destino) {
-        if (n == 0) {
-            return;
-        }
-        algoritmoHanoi(n - 1, origen, destino, temporal);
-        nm++;
-        movimientos[nm] = new Movimiento(n, origen, destino);
-        algoritmoHanoi(n - 1, temporal, origen, destino);
-    }
+    
 
     public void actionPerformed(ActionEvent e) {
         switch (paso) {
