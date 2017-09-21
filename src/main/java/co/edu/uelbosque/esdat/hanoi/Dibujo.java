@@ -7,6 +7,9 @@ import java.awt.Image;
 import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.Observable;
+import java.util.Observer;
+
 import javax.swing.Timer;
 import javax.swing.ImageIcon;
 import javax.swing.JPanel;
@@ -15,11 +18,11 @@ import javax.swing.JPanel;
  * Clase Dibujo
  * @author Daniel Alvarez
  */
-public class Dibujo extends JPanel implements ActionListener {
+public class Dibujo extends JPanel implements ActionListener, Observer {
 
     private int nroFichas;
     private int[] topes;
-    private int movimientoActual;
+    private Movimiento movimientoActual;
     private Image[] fichas;
     private int x, y;
     private int ficha;
@@ -63,16 +66,13 @@ public class Dibujo extends JPanel implements ActionListener {
         topes[3] = 0;
         ficha = 1;
         movimientos = new Movimiento[(int) Math.pow(2, nroFichas)];
-        AlgoritmoHanoi ah=new AlgoritmoHanoi(movimientos);
-        movimientos=ah.algoritmoHanoi(nroFichas, 1, 2, 3); // llena el vector de movimientos
-        posiciones = new Posicion[9];
+       posiciones = new Posicion[9];
         for (int i = 1; i <= nroFichas; i++) {
             int w = nroFichas - i + 1;
             posiciones[i] = new Posicion(posicionXFicha(i, 1), posicionYFicha(w));
         }
         x = posiciones[1].getX();
         y = posiciones[1].getY();
-        movimientoActual = 1;
         movimientoCompletado = false;
         paso = 1;
     }
@@ -99,7 +99,7 @@ public class Dibujo extends JPanel implements ActionListener {
                     y--;
                     posiciones[ficha].setY(y);
                 } else {
-                    if (movimientos[movimientoActual].getTorreOrigen() < movimientos[movimientoActual].getTorreDestino()) {
+                    if (movimientoActual.getTorreOrigen() < movimientoActual.getTorreDestino()) {
                         paso = 2; // mover a la derecha
                     } else {
                         paso = 3; // mover a la izquierda
@@ -107,7 +107,7 @@ public class Dibujo extends JPanel implements ActionListener {
                 }
                 break;
             case 2: // mover hacia derecha
-                if (x < posicionXFicha(ficha, movimientos[movimientoActual].getTorreDestino())) { // recorre hasta la torre destino
+                if (x < posicionXFicha(ficha, movimientoActual.getTorreDestino())) { // recorre hasta la torre destino
                     x++;
                     posiciones[ficha].setX(x);
                 } else {
@@ -115,7 +115,7 @@ public class Dibujo extends JPanel implements ActionListener {
                 }
                 break;
             case 3: // mover hacia izquierda
-                if (x > posicionXFicha(ficha, movimientos[movimientoActual].getTorreDestino())) { // recorre hasta la torre destino
+                if (x > posicionXFicha(ficha, movimientoActual.getTorreDestino())) { // recorre hasta la torre destino
                     x--;
                     posiciones[ficha].setX(x);
                 } else {
@@ -123,26 +123,25 @@ public class Dibujo extends JPanel implements ActionListener {
                 }
                 break;
             case 4: // mover hacia abajo
-                int nivel = topes[movimientos[movimientoActual].getTorreDestino()] + 1;
+                int nivel = topes[movimientoActual.getTorreDestino()] + 1;
                 if (y < posicionYFicha(nivel)) {
                     y++;
                     posiciones[ficha].setY(y);
                 } else {
                     movimientoCompletado = true;
+                    timer.stop();
                 }
                 break;
         }
         if (movimientoCompletado) {
             paso = 1;
-            topes[movimientos[movimientoActual].getTorreDestino()]++;
-            topes[movimientos[movimientoActual].getTorreOrigen()]--;
-            movimientoActual++;
-            if (movimientoActual == (int) Math.pow(2, nroFichas)) {
-                timer.stop();
+            topes[movimientoActual.getTorreDestino()]++;
+            topes[movimientoActual.getTorreOrigen()]--;
+            if (movimientoActual.getFicha() == (int) Math.pow(2, nroFichas)) {                
                 nucleo.resolucionCompletada();
             } else {
-                movimientoCompletado = false;
-                ficha = movimientos[movimientoActual].getFicha();
+                //movimientoCompletado = false;
+                ficha = movimientoActual.getFicha();
                 x = posiciones[ficha].getX();
                 y = posiciones[ficha].getY();
             }
@@ -196,10 +195,40 @@ public class Dibujo extends JPanel implements ActionListener {
     }
 
     public void iniciarAnimacion() {
-        timer.restart();
+    	final AlgoritmoHanoi ah=new AlgoritmoHanoi(movimientos);
+        ah.addObserver(this);
+        Thread t=new Thread(new Runnable() {
+			
+			public void run() {
+				movimientos=ah.algoritmoHanoi2(nroFichas, 1, 2, 3); // llena el vector de movimientos
+				
+			}
+		});
+        t.start();
+//    
+        
     }
 
     public void pausarAnimacion() {
         timer.stop();
     }
+
+	public void update(Observable o, Object arg) {
+		Movimiento tmp=(Movimiento)arg;
+		System.out.println("Moviendo de torre:"+tmp.getTorreOrigen()+
+				" a torre: "+tmp.getTorreDestino()+
+				" disco: "+tmp.getFicha());
+		this.movimientoActual=tmp;
+		timer.restart();
+		while(timer.isRunning()) {
+			synchronized (timer) {
+				try {
+					timer.wait(1);
+				} catch (InterruptedException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+			}
+		}
+	}
 }
