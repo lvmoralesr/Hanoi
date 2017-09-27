@@ -133,19 +133,7 @@ public class Dibujo extends JPanel implements ActionListener, Observer {
                 }
                 break;
         }
-        if (movimientoCompletado) {
-            paso = 1;
-            topes[movimientoActual.getTorreDestino()]++;
-            topes[movimientoActual.getTorreOrigen()]--;
-            if (movimientoActual.getFicha() == (int) Math.pow(2, nroFichas)) {                
-                nucleo.resolucionCompletada();
-            } else {
-                //movimientoCompletado = false;
-                ficha = movimientoActual.getFicha();
-                x = posiciones[ficha].getX();
-                y = posiciones[ficha].getY();
-            }
-        }
+        
         repaint();
     }
 
@@ -219,11 +207,22 @@ public class Dibujo extends JPanel implements ActionListener, Observer {
 				" a torre: "+tmp.getTorreDestino()+
 				" disco: "+tmp.getFicha());
 		this.movimientoActual=tmp;
+		paso = 1;
+        topes[movimientoActual.getTorreDestino()]++;
+        topes[movimientoActual.getTorreOrigen()]--;
+        if (movimientoActual.getFicha() == (int) Math.pow(2, nroFichas)) {                
+            nucleo.resolucionCompletada();
+        } else {
+            //movimientoCompletado = false;
+            ficha = movimientoActual.getFicha();
+            x = posiciones[ficha].getX();
+            y = posiciones[ficha].getY();
+        }
 		timer.restart();
 		while(timer.isRunning()) {
 			synchronized (timer) {
-				try {
-					timer.wait(1);
+				try {					
+					timer.wait(2);					
 				} catch (InterruptedException e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
