@@ -27,7 +27,7 @@ public class MainFrame extends JFrame implements ActionListener, ChangeListener 
     private Dibujo dibujo;
 
     public MainFrame() {
-        super("Tower of Hanoi | alvarez.tech");
+        super("Tower of Hanoi | alvarez.tech"); ///lllll
         configurarVentana();
         inicializarComponentes();
         this.setVisible(true);
