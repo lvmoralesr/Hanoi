@@ -2,6 +2,7 @@ package co.edu.uelbosque.esdat.hanoi;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.Stack;
 
 import javax.swing.Timer;
 
@@ -15,7 +16,6 @@ public class AnimacionMovimiento extends Timer implements ActionListener {
 
     private int paso;
     Disco discoActual;
-    private int[] topes;
     private int x, y;
     private int ficha;
     private Disco[] discos;
@@ -26,6 +26,10 @@ public class AnimacionMovimiento extends Timer implements ActionListener {
     private static final int LIMITE_FICHAS = 8;
     private int nroFichas;
     Timer timer;
+
+	private Stack<Disco> pila1;
+	private Stack<Disco> pila2;
+	private Stack<Disco> pila3;
     
     public void setAnimacionMovimiento(Disco discoActual,int nroFichas) {
     	
@@ -44,10 +48,10 @@ public class AnimacionMovimiento extends Timer implements ActionListener {
     
 	private void inicializarComponentesDeAnimacion() {
 	        
-	        topes = new int[LIMITE_TORRES + 1];
-	        topes[1] = LIMITE_FICHAS;
-	        topes[2] = 0;
-	        topes[3] = 0;
+	        setPila1(new Stack<Disco>());
+	        setPila2(new Stack<Disco>());
+	        setPila3(new Stack<Disco>());
+	       
 	        ficha = 1;
 	        discos = new Disco[(int) Math.pow(2, nroFichas)];
 	        posiciones = new Posicion[9];
@@ -92,7 +96,7 @@ public class AnimacionMovimiento extends Timer implements ActionListener {
                 }
                 break;
             case 4: // mover hacia abajo
-                int nivel = topes[discoActual.getTorreDestino()] + 1;
+                int nivel = pila[discoActual.getTorreDestino()] + 1;
                 if (y < posicionYFicha(nivel)) {
                     y++;
                     posiciones[ficha].setY(y);
@@ -166,4 +170,28 @@ public class AnimacionMovimiento extends Timer implements ActionListener {
         }
         return 0;
     }
+
+	public Stack<Disco> getPila3() {
+		return pila3;
+	}
+
+	public void setPila3(Stack<Disco> pila3) {
+		this.pila3 = pila3;
+	}
+
+	public Stack<Disco> getPila2() {
+		return pila2;
+	}
+
+	public void setPila2(Stack<Disco> pila2) {
+		this.pila2 = pila2;
+	}
+
+	public Stack<Disco> getPila1() {
+		return pila1;
+	}
+
+	public void setPila1(Stack<Disco> pila1) {
+		this.pila1 = pila1;
+	}
 }
