@@ -23,11 +23,11 @@ public class Dibujo extends JPanel implements ActionListener, Observer {
 
 	private int nroFichas;
 	private int[] topes;
-	private Movimiento movimientoActual;
+	private Disco discoActual;
 	private Image[] fichas;
 	private int x, y;
 	private int ficha;
-	private Movimiento[] movimientos;
+	private Disco[] discos;
 	private Posicion[] posiciones;
 	private Timer timer;
 	private boolean movimientoCompletado;
@@ -67,7 +67,7 @@ public class Dibujo extends JPanel implements ActionListener, Observer {
 		topes[2] = -1;
 		topes[3] = -1;
 		ficha = 1;
-		movimientos = new Movimiento[(int) Math.pow(2, nroFichas)];
+		discos = new Disco[(int) Math.pow(2, nroFichas)];
 		posiciones = new Posicion[9];
 		for (int i = 1; i <= nroFichas; i++) {
 			int w = nroFichas - i + 1;
@@ -99,7 +99,7 @@ public class Dibujo extends JPanel implements ActionListener, Observer {
 				y--;
 				posiciones[ficha].setY(y);
 			} else {
-				if (movimientoActual.getTorreOrigen() < movimientoActual.getTorreDestino()) {
+				if (discoActual.getTorreOrigen() < discoActual.getTorreDestino()) {
 					paso = 2; // mover a la derecha
 				} else {
 					paso = 3; // mover a la izquierda
@@ -107,7 +107,7 @@ public class Dibujo extends JPanel implements ActionListener, Observer {
 			}
 			break;
 		case 2: // mover hacia derecha
-			if (x < posicionXFicha(ficha, movimientoActual.getTorreDestino())) { // recorre
+			if (x < posicionXFicha(ficha, discoActual.getTorreDestino())) { // recorre
 																					// hasta
 																					// la
 																					// torre
@@ -119,7 +119,7 @@ public class Dibujo extends JPanel implements ActionListener, Observer {
 			}
 			break;
 		case 3: // mover hacia izquierda
-			if (x > posicionXFicha(ficha, movimientoActual.getTorreDestino())) { // recorre
+			if (x > posicionXFicha(ficha, discoActual.getTorreDestino())) { // recorre
 																					// hasta
 																					// la
 																					// torre
@@ -131,7 +131,7 @@ public class Dibujo extends JPanel implements ActionListener, Observer {
 			}
 			break;
 		case 4: // mover hacia abajo
-			int nivel = topes[movimientoActual.getTorreDestino()] + 1;
+			int nivel = topes[discoActual.getTorreDestino()] + 1;
 			if (y < posicionYFicha(nivel)) {
 				y++;
 				posiciones[ficha].setY(y);
@@ -190,12 +190,12 @@ public class Dibujo extends JPanel implements ActionListener, Observer {
 	}
 
 	public void iniciarAnimacion() {
-		final AlgoritmoHanoi ah = new AlgoritmoHanoi(movimientos);
+		final AlgoritmoHanoi ah = new AlgoritmoHanoi(discos);
 		ah.addObserver(this);
 		Thread t = new Thread(new Runnable() {
 
 			public void run() {
-				movimientos = ah.algoritmoHanoi2(nroFichas, 1, 2, 3); // llena
+				discos = ah.algoritmoHanoi2(nroFichas, 1, 2, 3); // llena
 																		// el
 																		// vector
 																		// de
@@ -213,18 +213,18 @@ public class Dibujo extends JPanel implements ActionListener, Observer {
 	}
 
 	public void update(Observable o, Object arg) {
-		Movimiento tmp = (Movimiento) arg;
+		Disco tmp = (Disco) arg;
 		System.out.println("Moviendo de torre:" + tmp.getTorreOrigen() + " a torre: " + tmp.getTorreDestino()
 				+ " disco: " + tmp.getFicha());
-		this.movimientoActual = tmp;
+		this.discoActual = tmp;
 		paso = 1;
-		topes[movimientoActual.getTorreDestino()]++;
-		topes[movimientoActual.getTorreOrigen()]--;
-		if (movimientoActual.getFicha() == (int) Math.pow(2, nroFichas)) {
+		topes[discoActual.getTorreDestino()]++;
+		topes[discoActual.getTorreOrigen()]--;
+		if (discoActual.getFicha() == (int) Math.pow(2, nroFichas)) {
 			nucleo.resolucionCompletada();
 		} else {
 			// movimientoCompletado = false;
-			ficha = movimientoActual.getFicha();
+			ficha = discoActual.getFicha();
 			x = posiciones[ficha].getX();
 			y = posiciones[ficha].getY();
 		}

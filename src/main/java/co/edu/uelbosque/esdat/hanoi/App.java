@@ -13,15 +13,15 @@ public class App implements Observer
     {
         System.out.println( "Hello World!" );
         App app=new App();
-        Movimiento movimientos[] = new Movimiento[(int) Math.pow(2, 3)];
-        AlgoritmoHanoi ah=new AlgoritmoHanoi(movimientos);
+        Disco discos[] = new Disco[(int) Math.pow(2, 3)];
+        AlgoritmoHanoi ah=new AlgoritmoHanoi(discos);
         ah.addObserver(app);
-        movimientos=ah.algoritmoHanoi2(3, 1, 2, 3);
+        discos=ah.algoritmoHanoi2(3, 1, 2, 3);
         
     }
 
 	public void update(Observable o, Object arg) {
-		Movimiento tmp=(Movimiento)arg;
+		Disco tmp=(Disco)arg;
 		System.out.println("Moviendo de torre:"+tmp.getTorreOrigen()+
 				" a torre: "+tmp.getTorreDestino()+
 				" disco: "+tmp.getFicha());

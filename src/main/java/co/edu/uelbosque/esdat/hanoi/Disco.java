@@ -4,13 +4,13 @@ package co.edu.uelbosque.esdat.hanoi;
  * Clase Movimiento
  * @author Daniel Alvarez
  */
-public class Movimiento {
+public class Disco {
 
     private int ficha;
     private int torreOrigen;
     private int torreDestino;
 
-    public Movimiento(int ficha, int torreOrigen, int torreDestino) {
+    public Disco(int ficha, int torreOrigen, int torreDestino) {
         this.ficha = ficha;
         this.torreOrigen = torreOrigen;
         this.torreDestino = torreDestino;

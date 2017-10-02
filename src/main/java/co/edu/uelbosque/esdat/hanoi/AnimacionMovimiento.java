@@ -14,11 +14,11 @@ public class AnimacionMovimiento extends Timer implements ActionListener {
 	private Posicion[] posiciones;
 
     private int paso;
-    Movimiento movimientoActual;
+    Disco discoActual;
     private int[] topes;
     private int x, y;
     private int ficha;
-    private Movimiento[] movimientos;
+    private Disco[] discos;
     private boolean movimientoCompletado;
     
     private static final int VELOCIDAD = 1;
@@ -27,12 +27,12 @@ public class AnimacionMovimiento extends Timer implements ActionListener {
     private int nroFichas;
     Timer timer;
     
-    public void setAnimacionMovimiento(Movimiento movimientoActual,int nroFichas) {
+    public void setAnimacionMovimiento(Disco discoActual,int nroFichas) {
     	
     	this.setDelay(1);
     	this.addActionListener(this);
     	this.nroFichas=nroFichas;
-    	this.movimientoActual=movimientoActual;
+    	this.discoActual=discoActual;
     	
     	inicializarComponentesDeAnimacion();
     	
@@ -49,8 +49,8 @@ public class AnimacionMovimiento extends Timer implements ActionListener {
 	        topes[2] = 0;
 	        topes[3] = 0;
 	        ficha = 1;
-	        movimientos = new Movimiento[(int) Math.pow(2, nroFichas)];
-	       posiciones = new Posicion[9];
+	        discos = new Disco[(int) Math.pow(2, nroFichas)];
+	        posiciones = new Posicion[9];
 	        for (int i = 1; i <= nroFichas; i++) {
 	            int w = nroFichas - i + 1;
 	            posiciones[i] = new Posicion(posicionXFicha(i, 1), posicionYFicha(w));
@@ -68,7 +68,7 @@ public class AnimacionMovimiento extends Timer implements ActionListener {
                     y--;
                     posiciones[ficha].setY(y);
                 } else {
-                    if (movimientoActual.getTorreOrigen() < movimientoActual.getTorreDestino()) {
+                    if (discoActual.getTorreOrigen() < discoActual.getTorreDestino()) {
                         paso = 2; // mover a la derecha
                     } else {
                         paso = 3; // mover a la izquierda
@@ -76,7 +76,7 @@ public class AnimacionMovimiento extends Timer implements ActionListener {
                 }
                 break;
             case 2: // mover hacia derecha
-                if (x < posicionXFicha(ficha, movimientoActual.getTorreDestino())) { // recorre hasta la torre destino
+                if (x < posicionXFicha(ficha, discoActual.getTorreDestino())) { // recorre hasta la torre destino
                     x++;
                     posiciones[ficha].setX(x);
                 } else {
@@ -84,7 +84,7 @@ public class AnimacionMovimiento extends Timer implements ActionListener {
                 }
                 break;
             case 3: // mover hacia izquierda
-                if (x > posicionXFicha(ficha, movimientoActual.getTorreDestino())) { // recorre hasta la torre destino
+                if (x > posicionXFicha(ficha, discoActual.getTorreDestino())) { // recorre hasta la torre destino
                     x--;
                     posiciones[ficha].setX(x);
                 } else {
@@ -92,7 +92,7 @@ public class AnimacionMovimiento extends Timer implements ActionListener {
                 }
                 break;
             case 4: // mover hacia abajo
-                int nivel = topes[movimientoActual.getTorreDestino()] + 1;
+                int nivel = topes[discoActual.getTorreDestino()] + 1;
                 if (y < posicionYFicha(nivel)) {
                     y++;
                     posiciones[ficha].setY(y);
@@ -104,13 +104,13 @@ public class AnimacionMovimiento extends Timer implements ActionListener {
         }
         if (movimientoCompletado) {
             paso = 1;
-            topes[movimientoActual.getTorreDestino()]++;
-            topes[movimientoActual.getTorreOrigen()]--;
-            if (movimientoActual.getFicha() == (int) Math.pow(2, nroFichas)) {                
+            topes[discoActual.getTorreDestino()]++;
+            topes[discoActual.getTorreOrigen()]--;
+            if (discoActual.getFicha() == (int) Math.pow(2, nroFichas)) {                
               //  nucleo.resolucionCompletada();
             } else {
                 //movimientoCompletado = false;
-                ficha = movimientoActual.getFicha();
+                ficha = discoActual.getFicha();
                 x = posiciones[ficha].getX();
                 y = posiciones[ficha].getY();
             }
