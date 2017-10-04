@@ -6,6 +6,8 @@ public class AlgoritmoHanoi extends Observable {
 
 	private int nm;
     private Disco[] discos;
+    private int posicionx;
+    private int posiciony;
     
     public AlgoritmoHanoi(Disco[] movimientos) {
     	this.nm=0;
@@ -19,7 +21,7 @@ public class AlgoritmoHanoi extends Observable {
         }
         algoritmoHanoi(n - 1, origen, destino, temporal);        
         nm++;
-        discos[nm] = new Disco(n, origen, destino);
+        discos[nm] = new Disco(n, origen, destino, posicionx, posiciony);
         algoritmoHanoi(n - 1, temporal, origen, destino);
         return discos;
     }
@@ -30,7 +32,7 @@ public class AlgoritmoHanoi extends Observable {
         }
         algoritmoHanoi2(n - 1, origen, destino, temporal);
         this.setChanged();
-        Disco movimientoTMP = new Disco(n, origen, destino);
+        Disco movimientoTMP = new Disco(n, origen, destino, posicionx, posiciony);
         this.notifyObservers(movimientoTMP);
         algoritmoHanoi2(n - 1, temporal, origen, destino);
         return discos;

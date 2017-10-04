@@ -6,8 +6,7 @@ package co.edu.uelbosque.esdat.hanoi;
  */
 public class Posicion {
 
-    private int x;
-    private int y;
+
 
     public Posicion(int x, int y) {
         this.x = x;

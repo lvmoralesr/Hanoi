@@ -12,12 +12,9 @@ public class AnimacionMovimiento extends Timer implements ActionListener {
 		super(delay, listener);       
 	}
 
-	private Posicion[] posiciones;
-
-    private int paso;
+	private int paso;
     Disco discoActual;
-    private int x, y;
-    private int ficha;
+    private int numeroDisco;
     private Disco[] discos;
     private boolean movimientoCompletado;
     
@@ -42,25 +39,21 @@ public class AnimacionMovimiento extends Timer implements ActionListener {
     	
 	}
     
-    public Posicion[] getPosiciones() {
-		return posiciones;
-	}
-    
+     
 	private void inicializarComponentesDeAnimacion() {
 	        
 	        setPila1(new Stack<Disco>());
 	        setPila2(new Stack<Disco>());
 	        setPila3(new Stack<Disco>());
 	       
-	        ficha = 1;
+	        numeroDisco = 1;
 	        discos = new Disco[(int) Math.pow(2, nroFichas)];
-	        posiciones = new Posicion[9];
 	        for (int i = 1; i <= nroFichas; i++) {
 	            int w = nroFichas - i + 1;
-	            posiciones[i] = new Posicion(posicionXFicha(i, 1), posicionYFicha(w));
+	            discoActual.setPosicionX(posicionXFicha(i, 1));
+	            discoActual.setPosicionY(posicionYFicha(w));
 	        }
-	        x = posiciones[1].getX();
-	        y = posiciones[1].getY();
+
 	        movimientoCompletado = false;
 	        paso = 1;
 	    }

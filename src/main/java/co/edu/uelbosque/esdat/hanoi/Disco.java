@@ -6,25 +6,45 @@ package co.edu.uelbosque.esdat.hanoi;
  */
 public class Disco {
 
-    private int ficha;
+    private int numeroDisco;
     private int torreOrigen;
     private int torreDestino;
+    private int posicionX;
+    private int posicionY;
 
-    public Disco(int ficha, int torreOrigen, int torreDestino) {
-        this.ficha = ficha;
+    public Disco(int numeroDisco, int torreOrigen, int torreDestino, int posicionX, int posicionY) {
+        this.numeroDisco = numeroDisco;
         this.torreOrigen = torreOrigen;
         this.torreDestino = torreDestino;
+        this.posicionX=posicionX;
+        this.posicionY=posicionY;
     }
 
-    public int getFicha() {
-        return ficha;
-    }
+    public int getPosicionX() {
+		return posicionX;
+	}
 
-    public void setFicha(int ficha) {
-        this.ficha = ficha;
-    }
+	public void setPosicionX(int posicionX) {
+		this.posicionX = posicionX;
+	}
 
-    public int getTorreDestino() {
+	public int getPosicionY() {
+		return posicionY;
+	}
+
+	public void setPosicionY(int posicionY) {
+		this.posicionY = posicionY;
+	}
+
+	public int getNumeroDisco() {
+		return numeroDisco;
+	}
+
+	public void setNumeroDisco(int numeroDisco) {
+		this.numeroDisco = numeroDisco;
+	}
+
+	public int getTorreDestino() {
         return torreDestino;
     }
 
